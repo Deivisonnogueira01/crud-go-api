@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-
-	"go-main/model"
 )
 
 func main() {
