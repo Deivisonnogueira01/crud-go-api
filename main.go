@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"https://github.com/Deivisonnogueira01/go-trab-final/model"
 )
 
 func main() {
@@ -14,7 +16,7 @@ func main() {
 			err := json.NewDecoder(req.Body).Decode(&aluno)
 			if err != nil {
 				fmt.Printf("Desculpe, Não consegui Ler :( : %s", err.Error())
-				http.Error(resp, "Erro  ao Criar Dado, la ele", http.StatusBadRequest)
+				http.Error(resp, "Erro  ao Criar  ", http.StatusBadRequest)
 				return
 			}
 
