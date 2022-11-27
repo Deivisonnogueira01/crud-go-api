@@ -9,4 +9,8 @@ type Aluno struct {
 
 type ListaDeAlunos struct {
 	ListaDeAlunos []Aluno `json:"aluno"`
+
+	//	ListaDeAlunosTCC []Aluno `json:"alunotcc"`
+
+	//	ListaDeAlunosTETI []Aluno `json:"alunoteti`
 }
