@@ -102,13 +102,13 @@ func (s Service) GetByID(personID int) (model.Aluno, error) {
 func (s *Service) Update(alunoEnti model.Aluno) error {
 	var indexToUpdate int = -1
 	for index, alunoInfo := range s.alunos.ListaDeAlunos {
-		if alunoInfo.ID == alunoEnti.ID {
+		if int(alunoInfo.NotaAluno) == int(alunoEnti.NotaAluno) {
 			indexToUpdate = index
 			break
 		}
 	}
 	if indexToUpdate < 0 {
-		return fmt.Errorf("Não Encontrei nenhum Id Correspondente desse Aluno :(")
+		return fmt.Errorf("Nota Inválida")
 	}
 
 	s.alunos.ListaDeAlunos[indexToUpdate] = alunoEnti
