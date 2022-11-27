@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+
 	service, err := regras.NewService("regras.json")
 	if err != nil {
 		fmt.Printf("Erro ao Criar Serviço de Aluno: %s\n", err.Error())
@@ -25,6 +26,7 @@ func main() {
 				resposta.WriteHeader(http.StatusOK)
 				resposta.Header().Set("Content-Type", "application/json")
 				err = json.NewEncoder(resposta).Encode(service.List())
+
 				if err != nil {
 					http.Error(resposta, "Erro ao Listar Alunos", http.StatusInternalServerError)
 					return
@@ -50,6 +52,7 @@ func main() {
 			}
 			return
 		}
+
 		if req.Method == "POST" {
 			var aluno model.Aluno
 			err := json.NewDecoder(req.Body).Decode(&aluno)
@@ -72,33 +75,13 @@ func main() {
 			resposta.WriteHeader(http.StatusCreated)
 			return
 		}
-		/*if req.Method == "DELETE" {
-			path := strings.TrimPrefix(req.URL.Path, "/aluno/")
-			if path == "" {
-				http.Error(resposta, "ID is required to delete a aluno", http.StatusBadRequest)
-				return
-			} else {
-				idAluno, err := strconv.Atoi(path)
-				if err != nil {
-					http.Error(resposta, "Invalid id given. aluno ID must be an integer", http.StatusBadRequest)
-					return
-				}
-				err = service.DeleteByID(idAluno)
-				if err != nil {
-					fmt.Printf("Error trying to delete aluno: %s\n", err.Error())
-					http.Error(resposta, "Error trying to delete aluno", http.StatusInternalServerError)
-					return
-				}
-				resposta.WriteHeader(http.StatusOK)
-			}
-			return
-		}*/
+
 		if req.Method == "PUT" {
 			var aluno model.Aluno
 			err := json.NewDecoder(req.Body).Decode(&aluno)
 			if err != nil {
 				fmt.Printf("Por Favor Insira no Formato Json {}: %s\n", err.Error())
-				http.Error(resposta, "Error trying to update aluno", http.StatusBadRequest)
+				http.Error(resposta, "Erro ao Tentar Atualizar Aluno :)", http.StatusBadRequest)
 				return
 			}
 			if aluno.ID <= 0 {
