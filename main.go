@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	service, err := regras.NewService("zip.json")
+	service, err := regras.NewService("regras.json")
 	if err != nil {
 		fmt.Printf("Error trying to creating personService: %s\n", err.Error())
 	}
@@ -24,7 +24,7 @@ func main() {
 				// list all people
 				resposta.WriteHeader(http.StatusOK)
 				resposta.Header().Set("Content-Type", "application/json")
-				err = json.NewEncoder(resposta).Encode(regras.List())
+				err = json.NewEncoder(resposta).Encode(service.List())
 				if err != nil {
 					http.Error(resposta, "Error trying to list people", http.StatusInternalServerError)
 					return
