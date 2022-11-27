@@ -14,25 +14,25 @@ import (
 func main() {
 	service, err := regras.NewService("regras.json")
 	if err != nil {
-		fmt.Printf("Error trying to creating personService: %s\n", err.Error())
+		fmt.Printf("Erro ao Criar Serviço de Aluno: %s\n", err.Error())
 	}
 
 	http.HandleFunc("/aluno/", func(resposta http.ResponseWriter, req *http.Request) {
 		if req.Method == "GET" {
 			path := strings.TrimPrefix(req.URL.Path, "/aluno/")
 			if path == "" {
-				// list all people
+
 				resposta.WriteHeader(http.StatusOK)
 				resposta.Header().Set("Content-Type", "application/json")
 				err = json.NewEncoder(resposta).Encode(service.List())
 				if err != nil {
-					http.Error(resposta, "Error trying to list people", http.StatusInternalServerError)
+					http.Error(resposta, "Erro ao Listar Alunos", http.StatusInternalServerError)
 					return
 				}
 			} else {
 				idAluno, err := strconv.Atoi(path)
 				if err != nil {
-					http.Error(resposta, "Invalid id given. aluno ID must be an integer", http.StatusBadRequest)
+					http.Error(resposta, "Por Favor informe apenas Números Inteiros", http.StatusBadRequest)
 					return
 				}
 				aluno, err := service.GetByID(idAluno)
@@ -44,7 +44,7 @@ func main() {
 				resposta.Header().Set("Content-Type", "application/json")
 				err = json.NewEncoder(resposta).Encode(aluno)
 				if err != nil {
-					http.Error(resposta, "Error trying to get aluno", http.StatusInternalServerError)
+					http.Error(resposta, "Não Foi Possível Realizar a Busca por Esse Aluno", http.StatusInternalServerError)
 					return
 				}
 			}
@@ -54,25 +54,25 @@ func main() {
 			var aluno model.Aluno
 			err := json.NewDecoder(req.Body).Decode(&aluno)
 			if err != nil {
-				fmt.Printf("Error trying to decode body. Body should be a json. Error: %s\n", err.Error())
-				http.Error(resposta, "Error trying to create aluno", http.StatusBadRequest)
+				fmt.Printf("Por Favor Insira no Formato Json {}: %s\n", err.Error())
+				http.Error(resposta, "Não foi Possivel Criar Esse Aluno", http.StatusBadRequest)
 				return
 			}
 			if aluno.ID <= 0 {
-				http.Error(resposta, "aluno ID should be a positive integer", http.StatusBadRequest)
+				http.Error(resposta, "O Id do Aluno deve ser Inteiro e Positivo", http.StatusBadRequest)
 				return
 			}
 
 			err = service.Create(aluno)
 			if err != nil {
-				fmt.Printf("Error trying to create aluno: %s\n", err.Error())
-				http.Error(resposta, "Error trying to create aluno", http.StatusInternalServerError)
+				fmt.Printf("Erro ao Criar Aluno: %s\n", err.Error())
+				http.Error(resposta, "Não Foi Possivel Criar o Aluno", http.StatusInternalServerError)
 				return
 			}
 			resposta.WriteHeader(http.StatusCreated)
 			return
 		}
-		if req.Method == "DELETE" {
+		/*if req.Method == "DELETE" {
 			path := strings.TrimPrefix(req.URL.Path, "/aluno/")
 			if path == "" {
 				http.Error(resposta, "ID is required to delete a aluno", http.StatusBadRequest)
@@ -92,24 +92,24 @@ func main() {
 				resposta.WriteHeader(http.StatusOK)
 			}
 			return
-		}
+		}*/
 		if req.Method == "PUT" {
 			var aluno model.Aluno
 			err := json.NewDecoder(req.Body).Decode(&aluno)
 			if err != nil {
-				fmt.Printf("Error trying to decode body. Body should be a json. Error: %s\n", err.Error())
+				fmt.Printf("Por Favor Insira no Formato Json {}: %s\n", err.Error())
 				http.Error(resposta, "Error trying to update aluno", http.StatusBadRequest)
 				return
 			}
 			if aluno.ID <= 0 {
-				http.Error(resposta, "aluno ID should be a positive integer", http.StatusBadRequest)
+				http.Error(resposta, "O Id do Aluno deve ser Inteiro e Positivo", http.StatusBadRequest)
 				return
 			}
 
 			err = service.Update(aluno)
 			if err != nil {
-				fmt.Printf("Error trying to update aluno: %s\n", err.Error())
-				http.Error(resposta, "Error trying to update aluno", http.StatusInternalServerError)
+				fmt.Printf("Error ao Tentar Atualizar Informações do Aluno: %s\n", err.Error())
+				http.Error(resposta, "Erro ao Tentar Atualizar Aluno :(", http.StatusInternalServerError)
 				return
 			}
 			resposta.WriteHeader(http.StatusOK)
@@ -117,5 +117,5 @@ func main() {
 		}
 	})
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8087", nil)
 }

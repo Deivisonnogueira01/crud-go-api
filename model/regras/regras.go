@@ -33,12 +33,12 @@ func NewService(dbFilePath string) (Service, error) {
 
 	jsonFile, err := os.Open(dbFilePath)
 	if err != nil {
-		return Service{}, fmt.Errorf("Error trying to open file that contains all aluno: %s", err.Error())
+		return Service{}, fmt.Errorf("Erro Encontrado no Arquivo que possui todas as Informações: %s", err.Error())
 	}
 
 	jsonFileContentByte, err := ioutil.ReadAll(jsonFile)
 	if err != nil {
-		return Service{}, fmt.Errorf("Error trying to read aluno file: %s", err.Error())
+		return Service{}, fmt.Errorf("Erro Ao Ler arquivo processado: %s", err.Error())
 	}
 
 	var totalAlunos model.ListaDeAlunos
@@ -58,27 +58,27 @@ func (s *Service) AddAluno(alunoModel model.Aluno) error {
 func (s Service) saveFile() error {
 	allPeopleJSON, err := json.Marshal(s.alunos)
 	if err != nil {
-		return fmt.Errorf("Error trying to encode aluno as JSON: %s", err.Error())
+		return fmt.Errorf("Erro ao tentar codificar aluno como JSON: %s", err.Error())
 	}
 	return ioutil.WriteFile(s.dbFilePath, allPeopleJSON, 0755)
 }
 
 func (s *Service) Create(alunoModel model.Aluno) error {
 	if s.exists(alunoModel) {
-		return fmt.Errorf("There is already a person with this ID registered")
+		return fmt.Errorf("Já Existe um Aluno cadastrado com essas Informções")
 	}
 
 	err := s.AddAluno(alunoModel)
 	if err != nil {
-		return fmt.Errorf("Error trying to add Aluno to file: %s", err.Error())
+		return fmt.Errorf("Não Foi Possível adicionar as Informações no Arquivo: %s", err.Error())
 	}
 
 	return nil
 }
 
 func (s Service) exists(person model.Aluno) bool {
-	for _, currentPerson := range s.alunos.ListaDeAlunos {
-		if currentPerson.ID == person.ID {
+	for _, alunoInfo := range s.alunos.ListaDeAlunos {
+		if alunoInfo.ID == person.ID {
 			return true
 		}
 	}
@@ -90,24 +90,24 @@ func (s Service) List() model.ListaDeAlunos {
 }
 
 func (s Service) GetByID(personID int) (model.Aluno, error) {
-	for _, currentPerson := range s.alunos.ListaDeAlunos {
-		if currentPerson.ID == personID {
-			return currentPerson, nil
+	for _, alunoInfo := range s.alunos.ListaDeAlunos {
+		if alunoInfo.ID == personID {
+			return alunoInfo, nil
 		}
 	}
-	return model.Aluno{}, fmt.Errorf("Aluno not found")
+	return model.Aluno{}, fmt.Errorf("Aluno não Existe")
 }
 
 func (s *Service) DeleteByID(personID int) error {
 	var indexToRemove int = -1
-	for index, currentPerson := range s.alunos.ListaDeAlunos {
-		if currentPerson.ID == personID {
+	for index, alunoInfo := range s.alunos.ListaDeAlunos {
+		if alunoInfo.ID == personID {
 			indexToRemove = index
 			break
 		}
 	}
 	if indexToRemove < 0 {
-		return fmt.Errorf("There is no person with the provided ID")
+		return fmt.Errorf("ID Não Encontrado")
 	}
 
 	s.alunos.ListaDeAlunos = append(
@@ -120,14 +120,14 @@ func (s *Service) DeleteByID(personID int) error {
 
 func (s *Service) Update(person model.Aluno) error {
 	var indexToUpdate int = -1
-	for index, currentPerson := range s.alunos.ListaDeAlunos {
-		if currentPerson.ID == person.ID {
+	for index, alunoInfo := range s.alunos.ListaDeAlunos {
+		if alunoInfo.ID == person.ID {
 			indexToUpdate = index
 			break
 		}
 	}
 	if indexToUpdate < 0 {
-		return fmt.Errorf("There is no person with the given ID to be updated")
+		return fmt.Errorf("Não Encontrei nenhum Id Correspondente desse Aluno :(")
 	}
 
 	s.alunos.ListaDeAlunos[indexToUpdate] = person
@@ -140,12 +140,12 @@ func createEmptyFile(dbFilePath string) error {
 	}
 	peopleJSON, err := json.Marshal(aluno)
 	if err != nil {
-		return fmt.Errorf("Error trying to encode aluno as JSON: %s", err.Error())
+		return fmt.Errorf("Erro ao Processar os Dados via Json: %s", err.Error())
 	}
 
 	err = ioutil.WriteFile(dbFilePath, peopleJSON, 0755)
 	if err != nil {
-		return fmt.Errorf("Error trying to writing aluno file: %s", err.Error())
+		return fmt.Errorf("Erro ao Gravar Arquivo: %s", err.Error())
 	}
 
 	return nil
